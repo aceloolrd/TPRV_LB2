@@ -1,0 +1,34 @@
+#include <iostream>
+#include <opencv2/opencv.hpp>
+#include <omp.h>
+
+const int kernelSize = 3;  // Размер ядра свертки
+
+// Функция для применения свертки с ядром 3x3
+void applyConvolution(cv::Mat& input, cv::Mat& output, cv::Mat& kernel) {
+    cv::filter2D(input, output, -1, kernel);
+}
+
+int main() {
+    // Загрузка изображения из файла
+    cv::Mat image = cv::imread("test.png", cv::IMREAD_GRAYSCALE);
+
+    if (image.empty()) {
+        std::cerr << "Не удалось загрузить изображение." << std::endl;
+        return -1;
+    }
+
+    cv::Mat kernel = (cv::Mat_<float>(3, 3) << -1, -1, -1, -1, 8, -1, -1, -1, -1);
+
+    cv::Mat result;
+
+    // Применение свертки
+    applyConvolution(image, result, kernel);
+
+    // Вывод результата
+    cv::imshow("Исходное изображение", image);
+    cv::imshow("Результат свертки", result);
+    cv::waitKey(0);
+
+    return 0;
+}
